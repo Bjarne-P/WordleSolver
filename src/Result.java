@@ -6,9 +6,11 @@ import java.util.Arrays;
 public class Result {
 
     private LetterScore[] letterScores = new LetterScore[5];
+
     private boolean isCorrect = false;
 
     public Result(org.json.JSONArray jsonArray) {
+        int correctLetters = 0;
         for(int i = 0; i < 5; i++){
             JSONObject individualScore = jsonArray.getJSONObject(i);
             char letter  = individualScore.getString("char").charAt(0);
@@ -18,19 +20,36 @@ public class Result {
             Score score = Score.WRONG;
             if (in_word)
                 score = Score.WRONG_POSITION;
-            else if (correct_idx)
+            if (correct_idx) {
                 score = Score.RIGHT;
+                correctLetters++;
+            }
 
             letterScores[i] = new LetterScore(letter, score);
+        }
+        if (correctLetters == 5){
+            isCorrect = true;
         }
     }
 
     public Result(LetterScore[] letterScores){
-            this.letterScores = letterScores;
+        this.letterScores = letterScores;
+        int correctLetters = 0;
+        for (LetterScore letterScore: letterScores){
+            if (letterScore.getScore() == Score.RIGHT)
+                correctLetters++;
+        }
+        if (correctLetters == 5){
+            isCorrect = true;
+        }
     }
 
     public LetterScore[] getLetterScores() {
         return letterScores;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
     }
 
     @Override

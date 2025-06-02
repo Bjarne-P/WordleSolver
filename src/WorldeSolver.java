@@ -61,28 +61,28 @@ public class WorldeSolver {
         while (trys < 12) {
             if (trys > 0)
                 result = tryWordle(words.get(0));
+            if (result.isCorrect())
+                return words.get(0);
             letterScores = result.getLetterScores();
             ArrayList<String> toRemove = new ArrayList<>();
             for (String word : words) {
                 for (int i = 0; i < letterScores.length; i++) {
                     LetterScore letterScore = letterScores[i];
                     char c = letterScore.getLetter();
-
-
                     if (letterScore.getScore() == Score.RIGHT && word.charAt(i) != letterScore.getLetter()) {
-                        logger.info(word + " does not match " + letterScore.getLetter() + " at position " + i);
+                        //logger.info(word + " does not match " + letterScore.getLetter() + " at position " + i);
                         toRemove.add(word);
                         break;
                     } else if (letterScore.getScore() == Score.WRONG_POSITION && word.indexOf(letterScore.getLetter()) == -1) {
-                        logger.info(word + " does not contain " + letterScore.getLetter());
+                        //logger.info(word + " does not contain " + letterScore.getLetter());
                         toRemove.add(word);
                         break;
                     } else if (letterScore.getScore() == Score.WRONG_POSITION && word.indexOf(letterScore.getLetter()) == i) {
-                        logger.info(word + " contains " + letterScore.getLetter() + " at position " + i + " which is wrong.");
+                        //logger.info(word + " contains " + letterScore.getLetter() + " at position " + i + " which is wrong.");
                         toRemove.add(word);
                         break;
                     } else if (letterScore.getScore() == Score.WRONG && word.indexOf(letterScore.getLetter()) != -1) {
-                        logger.info(word + " contains " + letterScore.getLetter() + " which is wrong.");
+                        //logger.info(word + " contains " + letterScore.getLetter() + " which is wrong.");
                         toRemove.add(word);
                         break;
                     }
@@ -127,7 +127,7 @@ public class WorldeSolver {
             org.json.JSONArray characterInfo =  new JSONArray(reply.getJSONArray("character_info"));
             result = new Result(characterInfo);
         } catch (JSONException e) {
-            e.printStackTrace();
+            System.out.println("no character info returned");
         }
 
 
